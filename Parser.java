@@ -12,13 +12,5 @@ public class Parser{
         return "Good";
     }
 
-    public static void main(String[] args){
-        System.out.println("Hello, Java");
-    }
-}
 
-public class Terminal(){
-    public String pwd(){
-        return "Hello";
-    }
 }
