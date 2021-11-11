@@ -3,6 +3,7 @@
 //Solhf: pwd, ls-r, rmdir, touch
 import java.util.*;
 import java.io.File;
+import java.io.IOException;
 public class Terminal{
     File currentPath;
     public String pwd(){
@@ -10,8 +11,31 @@ public class Terminal{
     }
     
 
-    public void mkdir(){
-
+    public void mkdir(String[] dirs){
+        for(String file: dirs){
+            int val = file.lastIndexOf("/");
+            if(val == -1){
+                File newFile = new File(this.currentPath.getAbsolutePath() + "/" + file);
+                if(newFile.exists()){
+                    System.out.println(file + " Already exist");
+                }else{
+                    newFile.mkdirs();
+                }
+            }else{
+                String path = file.substring(0, file.lastIndexOf("/"));
+                File check = new File(path);
+                if(!check.isDirectory()){
+                    System.out.println("Invalid path: " + path);
+                    continue;
+                }
+                File newFile = new File(file);
+                if(newFile.exists()){
+                    System.out.println(file + " Already exist");
+                }else{
+                    newFile.mkdirs();
+                }
+            }
+        }
     }
     public Boolean cd(String path){
         if (path.equals("")){
@@ -50,6 +74,8 @@ public class Terminal{
             cd("..");
         }else if(parser.getCommandName().equals("cd")){
             cd("");
+        }else if (parser.getCommandName().equals("mkdir")){
+            mkdir(parser.getArgs());
         }
     }
     public static void main(String[] args){
