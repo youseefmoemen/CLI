@@ -3,6 +3,8 @@
 //Solhf: pwd, ls-r, rmdir, touch
 import java.util.*;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 public class Terminal{
     File currentPath;
@@ -10,16 +12,41 @@ public class Terminal{
         return "Hello";
     }
     
-
+    public void cp(String [] files){
+        if(files.length != 2){
+            System.out.println("Unvalid arguments only two files allowed");
+            return;
+        }
+        File file1 = new File(files[0]);
+        File file2 = new File(files[1]);
+        Scanner reader;
+        try {
+            reader = new Scanner(file1);
+        } catch (FileNotFoundException e) {
+            System.out.println("Source file not exist");
+            return;
+        }
+        try{
+            FileWriter myWriter = new FileWriter(file2);
+            while(reader.hasNextLine()){
+                myWriter.write(reader.nextLine());
+                myWriter.write("\n");
+            }
+            reader.close();
+            myWriter.close();
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
     public void mkdir(String[] dirs){
         for(String file: dirs){
             int val = file.lastIndexOf("/");
             if(val == -1){
-                File newFile = new File(this.currentPath.getAbsolutePath() + "/" + file);
-                if(newFile.exists()){
+                File newFolder = new File(this.currentPath.getAbsolutePath() + "/" + file);
+                if(newFolder.exists()){
                     System.out.println(file + " Already exist");
                 }else{
-                    newFile.mkdirs();
+                    newFolder.mkdirs();
                 }
             }else{
                 String path = file.substring(0, file.lastIndexOf("/"));
@@ -28,11 +55,11 @@ public class Terminal{
                     System.out.println("Invalid path: " + path);
                     continue;
                 }
-                File newFile = new File(file);
-                if(newFile.exists()){
+                File newFolder = new File(file);
+                if(newFolder.exists()){
                     System.out.println(file + " Already exist");
                 }else{
-                    newFile.mkdirs();
+                    newFolder.mkdirs();
                 }
             }
         }
@@ -76,6 +103,8 @@ public class Terminal{
             cd("");
         }else if (parser.getCommandName().equals("mkdir")){
             mkdir(parser.getArgs());
+        }else if(parser.getCommandName().equals("cp")){
+            cp(parser.getArgs());
         }
     }
     public static void main(String[] args){
