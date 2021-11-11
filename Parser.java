@@ -16,3 +16,9 @@ public class Parser{
         System.out.println("Hello, Java");
     }
 }
+
+public class Terminal(){
+    public String pwd(){
+        return "Hello";
+    }
+}
