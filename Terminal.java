@@ -6,13 +6,22 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+
 public class Terminal{
     File currentPath;
+    Boolean flag = true;
     public String pwd(){
         return "Hello";
     }
-    
+    public void cp_r(String[] folders){
+        if (folders.length != 3){
+            System.out.println("Unvalid arguments only two paths allowed");
+            return;
+        }
+        
+    }
     public void cp(String [] files){
+        //TODO check the path for the dest is correct
         if(files.length != 2){
             System.out.println("Unvalid arguments only two files allowed");
             return;
@@ -104,7 +113,16 @@ public class Terminal{
         }else if (parser.getCommandName().equals("mkdir")){
             mkdir(parser.getArgs());
         }else if(parser.getCommandName().equals("cp")){
+            if (parser.getArgs().length != 0){
+                if(parser.getArgs()[0].equals("-r")){
+                    cp_r(parser.getArgs());
+                    return;
+                }
+            }
             cp(parser.getArgs());
+        }
+        else if(parser.getCommandName().equals("exit")){
+            this.flag = false;
         }
     }
     public static void main(String[] args){
@@ -113,11 +131,12 @@ public class Terminal{
         Scanner scanner = new Scanner(System.in);
         String input = new String();
         Parser parser = new Parser();
-        while (true){ //Change to out with exit
+        while (terminal.flag){ //Change to out with exit
             System.out.println(terminal.currentPath);
             input = scanner.nextLine();
             parser.parse(input);
             terminal.chooseCommandAction(parser);
         }
+        scanner.close();
     }
 }
