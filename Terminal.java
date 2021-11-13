@@ -117,6 +117,8 @@ public class Terminal{
         }
         System.out.println();
     }
+
+    public void rm(){}
       
 
     public void chooseCommandAction(Parser parser){ // added the parser to be abel to access args
