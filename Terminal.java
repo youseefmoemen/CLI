@@ -6,18 +6,44 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class Terminal{
     File currentPath;
     Boolean flag = true;
     public void cp_r(String[] folders){
-        if (folders.length != 3){
+        if (folders.length != 3){ // -r f1 f2
             System.out.println("Unvalid arguments only two paths allowed");
             return;
         }
+        File file1 = new File(folders[1]);
+        File file2 = new File(folders[2]);
+        if(!file1.isDirectory()){
+            System.out.println("Unvalid Source folder");
+            return;
+        }else if(!file2.isDirectory()){
+            if(!file2.mkdirs()){
+                System.out.println("Unvalid Destination path");
+            }
+        }
         
+        File[]fiels_at_1 = new File(file1.getAbsolutePath()).listFiles();
+        for(File file: fiels_at_1){
+            if(file.isDirectory()){
+                File new_file = new File(file2.getAbsolutePath() + "/" + file.getName());
+                new_file.mkdirs();
+                String[] rec = {"", file.getAbsolutePath(), new_file.getAbsolutePath()};
+                this.cp_r(rec); //Recursion
+                continue; //to Not complete the loop
+            }
+            try {
+                Files.copy(file.toPath(), new File(file2.getAbsolutePath() + "/" + file.getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
     public void cp(String [] files){
         //TODO check the path for the dest is correct
@@ -120,7 +146,6 @@ public class Terminal{
     }
 
     public void rm(){}
-      
 
     public void chooseCommandAction(Parser parser){ // added the parser to be abel to access args
         if (parser.getCommandName().equals("cd") && parser.args.length != 0){
@@ -168,4 +193,3 @@ public class Terminal{
         scanner.close();
     }
 }
-
