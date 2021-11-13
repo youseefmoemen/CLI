@@ -47,6 +47,7 @@ public class Terminal{
             e.printStackTrace();
         }
     }
+    //TODO cd error
     public void mkdir(String[] dirs){
         for(String file: dirs){
             int val = file.lastIndexOf("/");
@@ -140,3 +141,4 @@ public class Terminal{
         scanner.close();
     }
 }
+
