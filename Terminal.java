@@ -1,18 +1,17 @@
 //Youseeef: cd, mkdir, cp, cp-r
-//Amin: rm, cat, echo, ls
-//Solhf: pwd, ls-r, rmdir, touch
+//Amin: rm, cat, echo, ls, pwd
+//Solhf: ls-r, rmdir, touch
 import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
 
 public class Terminal{
     File currentPath;
     Boolean flag = true;
-    public String pwd(){
-        return "Hello";
-    }
     public void cp_r(String[] folders){
         if (folders.length != 3){
             System.out.println("Unvalid arguments only two paths allowed");
@@ -101,6 +100,28 @@ public class Terminal{
         }
         return false;
     }
+    public void ls() {
+        File[] files = new File(currentPath.toString()).listFiles();
+
+        for (int i = 0; i < files.length; i++) {
+            System.out.println(files[i].getName());
+        }
+    }
+    public void pwd(){
+        System.out.println(currentPath);
+    }
+
+    public void echo(String[] sentence){
+        for(int i = 0; i <  sentence.length; i++){
+            System.out.print(sentence[i]);
+            System.out.print(' ');
+        }
+        System.out.println();
+    }
+
+    public void rm(){}
+      
+
     public void chooseCommandAction(Parser parser){ // added the parser to be abel to access args
         if (parser.getCommandName().equals("cd") && parser.args.length != 0){
             Boolean state = cd(parser.args[0]);
@@ -121,6 +142,12 @@ public class Terminal{
                 }
             }
             cp(parser.getArgs());
+        }else if(parser.getCommandName().equals("ls")){
+            ls();
+        } else if (parser.getCommandName().equals("pwd")) {
+            pwd();
+        } else if (parser.getCommandName().equals("echo")) {
+            echo(parser.getArgs());
         }
         else if(parser.getCommandName().equals("exit")){
             this.flag = false;
