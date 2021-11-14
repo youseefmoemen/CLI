@@ -3,6 +3,7 @@
 //Solhf: ls-r, rmdir, touch
 import java.util.*;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -101,7 +102,7 @@ public class Terminal{
     }
     public Boolean cd(String path){
         if (path.equals("")){
-            this.currentPath = new File("/home");
+            this.currentPath = new File("C:\\");
             return true;
         }
         if(path.equals("..")){
@@ -133,21 +134,69 @@ public class Terminal{
             System.out.println(files[i].getName());
         }
     }
-    public void pwd(){
+
+    public void pwd() {
         System.out.println(currentPath);
     }
 
     public void echo(String[] sentence){
-        for(int i = 0; i <  sentence.length; i++){
+        for(int i = 0; i  < sentence.length; i++){
             System.out.print(sentence[i]);
             System.out.print(' ');
         }
         System.out.println();
     }
 
-    public void rm(){}
+    public void rm(String[] files){
+       if(files.length == 1) {
+           File f = new File(files[0]);
+           if (!(f.isAbsolute()))
+               f = new File(currentPath + "\\" + files[0]);
+           if (f.delete()) {
+               if (f.isDirectory())
+                   System.out.println("Cannot Delete a Directory");
+               else
+                   f.delete();
+           } else
+               System.out.println("Could not delete file");
+        } else System.out.println("Wrong Number of Arguements");
+    }
 
-    public void chooseCommandAction(Parser parser){ // added the parser to be abel to access args
+    public void cat(String[] files) throws IOException {
+        if (files.length == 1) {
+            File file = new File(files[0]);
+            if (!(file.isAbsolute()))
+                file = new File(currentPath + "\\" + files[0]);
+            FileInputStream fis = new FileInputStream(file);
+
+            int oneByte;
+            while ((oneByte = fis.read()) != -1) {
+                System.out.write(oneByte);
+            }
+            fis.close();
+            System.out.flush();
+            System.out.println();
+        }
+        else if (files.length == 2){
+            for(int i = 0; i < 2; i++){
+                File file = new File(files[i]);
+                if (!(file.isAbsolute()))
+                    file = new File(currentPath + "\\" + files[i]);
+                FileInputStream fis = new FileInputStream(file);
+
+                int oneByte;
+                while ((oneByte = fis.read()) != -1) {
+                    System.out.write(oneByte);
+                }
+                fis.close();
+                System.out.flush();
+                System.out.println();
+            }
+        }
+        else System.out.println("Wrong number of arguments");
+    }
+
+    public void chooseCommandAction(Parser parser) throws IOException{ // added the parser to be abel to access args
         if (parser.getCommandName().equals("cd") && parser.args.length != 0){
             Boolean state = cd(parser.args[0]);
             if (state == false){
@@ -173,12 +222,16 @@ public class Terminal{
             pwd();
         } else if (parser.getCommandName().equals("echo")) {
             echo(parser.getArgs());
+        } else if (parser.getCommandName().equals("rm")) {
+            rm(parser.getArgs());
+        } else if (parser.getCommandName().equals("cat")) {
+            cat(parser.getArgs());
         }
         else if(parser.getCommandName().equals("exit")){
             this.flag = false;
         }
     }
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException{
         Terminal terminal = new Terminal();
         terminal.currentPath = new File(System.getProperty("user.dir"));  
         Scanner scanner = new Scanner(System.in);

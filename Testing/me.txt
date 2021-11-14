@@ -1,0 +1,15 @@
+    public static void main(String[] args) throws IOException{
+        Terminal terminal = new Terminal();
+        terminal.currentPath = new File(System.getProperty("user.dir"));  
+        Scanner scanner = new Scanner(System.in);
+        String input = new String();
+        Parser parser = new Parser();
+        while (terminal.flag){ //Change to out with exit
+            System.out.println(terminal.currentPath);
+            input = scanner.nextLine();
+            parser.parse(input);
+            terminal.chooseCommandAction(parser);
+        }
+        scanner.close();
+    }
+}
