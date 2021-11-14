@@ -46,6 +46,7 @@ public class Terminal{
         }
 
     }
+    
     public void cp(String [] files){
         //TODO check the path for the dest is correct
         if(files.length != 2){
@@ -100,6 +101,7 @@ public class Terminal{
             }
         }
     }
+    
     public Boolean cd(String path){
         if (path.equals("")){
             this.currentPath = new File("C:\\");
@@ -127,16 +129,22 @@ public class Terminal{
         }
         return false;
     }
-    public void ls() {
-        File[] files = new File(currentPath.toString()).listFiles();
+    
+    public void ls(String args[]) {
+        if(args.length == 0){
+            File[] files = new File(currentPath.toString()).listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            System.out.println(files[i].getName());
-        }
+            for (int i = 0; i < files.length; i++) {
+                System.out.println(files[i].getName());
+            }
+        } else System.out.println("Too Many Arguements");
     }
 
-    public void pwd() {
-        System.out.println(currentPath);
+    public void pwd(String args[]) {
+        if (args.length == 0) {
+            System.out.println(currentPath);
+        } else
+            System.out.println("Too Many Arguements");
     }
 
     public void echo(String[] sentence){
@@ -217,9 +225,9 @@ public class Terminal{
             }
             cp(parser.getArgs());
         }else if(parser.getCommandName().equals("ls")){
-            ls();
+            ls(parser.getArgs());
         } else if (parser.getCommandName().equals("pwd")) {
-            pwd();
+            pwd(parser.getArgs());
         } else if (parser.getCommandName().equals("echo")) {
             echo(parser.getArgs());
         } else if (parser.getCommandName().equals("rm")) {
