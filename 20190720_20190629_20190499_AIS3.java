@@ -313,8 +313,10 @@ public class Terminal {
                     rmdir(parser.getArgs());
                     return;
                 }
+                rmdir(parser.getArgs());
+            } else {
+            	System.out.println("enter folder name to delete");
             }
-            rmdir(parser.getArgs());
         } else if (parser.getCommandName().equals("exit")) {
             this.flag = false;
         }
