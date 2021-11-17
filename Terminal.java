@@ -123,8 +123,28 @@ public class Terminal {
         }
     }
 
+    public void rmdir(String[] args) {
+        if (args[0].equals("*")) {
+            File[] files = new File(currentPath.toString()).listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if(files[i].isDirectory()){
+                    files[i].delete();
+                } else continue;
+            }
+        } else {
+            File file = new File(args[0]);
+            if (!(file.isAbsolute()))
+                file = new File(currentPath + "\\" + args[0]);
+            if (file.delete()) {
+                System.out.println("Deleted the folder: " + file.getName());
+            } else {
+                System.out.println("Failed to delete the folder.");
+            }
+        }
+    }
+
     public void touch(String[] args) {
-        if(args.length == 1){
+        if (args.length == 1) {
             File file = new File(args[0]);
             if (!(file.isAbsolute()))
                 file = new File(currentPath + "\\" + args[0]);
@@ -140,7 +160,8 @@ public class Terminal {
             } catch (IOException e) {
                 e.printStackTrace(); // prints exception if any
             }
-        } else System.out.println("Wrong number of arguments");
+        } else
+            System.out.println("Wrong number of arguments");
     }
 
     public void cp(String[] args) {
@@ -284,6 +305,14 @@ public class Terminal {
             cat(parser.getArgs());
         } else if (parser.getCommandName().equals("touch")) {
             touch(parser.getArgs());
+        } else if (parser.getCommandName().equals("rmdir")) {
+            if (parser.getArgs().length != 0) {
+                if (parser.getArgs()[0].equals("*")) {
+                    rmdir(parser.getArgs());
+                    return;
+                }
+            }
+            rmdir(parser.getArgs());
         } else if (parser.getCommandName().equals("exit")) {
             this.flag = false;
         }
