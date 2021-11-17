@@ -56,16 +56,18 @@ public class Terminal {
             return true;
         }
         if (args.equals("..")) {
+            System.out.println(this.currentPath.getAbsolutePath());
             String pervious = this.currentPath.getAbsolutePath().substring(0,
-                    this.currentPath.getAbsolutePath().lastIndexOf("/"));
+                    this.currentPath.getAbsolutePath().lastIndexOf("\\"));
             if (pervious.equals("")) {
                 System.out.println("NO pervious path!");
                 return true;
             }
-            this.currentPath = new File(pervious);
+            this.currentPath = new File(pervious + "\\");
+            if(this.currentPath.isDirectory()) System.out.println("Hi");
             return true;
         }
-        File file = new File(this.currentPath.getAbsolutePath() + "/" + args);
+        File file = new File(this.currentPath.getAbsolutePath() + "\\" + args);
         if (file.isDirectory()) {
             this.currentPath = file;
             return true;
@@ -81,7 +83,7 @@ public class Terminal {
     public void ls(String[] args) {
 
         File[] files = new File(currentPath.toString()).listFiles();
-
+        System.out.println(this.currentPath);
         for (int i = 0; i < files.length; i++) {
             System.out.println(files[i].getName());
         }
@@ -97,16 +99,16 @@ public class Terminal {
 
     public void mkdir(String[] args) {
         for (String file : args) {
-            int val = file.lastIndexOf("/");
+            int val = file.lastIndexOf("\\");
             if (val == -1) {
-                File newFolder = new File(this.currentPath.getAbsolutePath() + "/" + file);
+                File newFolder = new File(this.currentPath.getAbsolutePath() + "\\" + file);
                 if (newFolder.exists()) {
                     System.out.println(file + " Already exist");
                 } else {
                     newFolder.mkdirs();
                 }
             } else {
-                String path = file.substring(0, file.lastIndexOf("/"));
+                String path = file.substring(0, file.lastIndexOf("\\"));
                 File check = new File(path);
                 if (!check.isDirectory()) {
                     System.out.println("Invalid path: " + path);
@@ -164,13 +166,16 @@ public class Terminal {
     }
 
     public void cp(String[] args) {
-        // TODO check the path for the dest is correct
         if (args.length != 2) {
             System.out.println("Unvalid arguments only two files allowed");
             return;
         }
         File file1 = new File(args[0]);
         File file2 = new File(args[1]);
+        if(!(file1.isDirectory() && file2.isDirectory())) {
+            System.out.println("Unvalid directories");
+            return;
+        } 
         Scanner reader;
         try {
             reader = new Scanner(file1);
@@ -190,7 +195,6 @@ public class Terminal {
             e.printStackTrace();
         }
     }
-    // TODO cd error
 
     public void cp_r(String[] args) {
         if (args.length != 3) { // -r f1 f2
@@ -211,14 +215,14 @@ public class Terminal {
         File[] fiels_at_1 = new File(file1.getAbsolutePath()).listFiles();
         for (File file : fiels_at_1) {
             if (file.isDirectory()) {
-                File new_file = new File(file2.getAbsolutePath() + "/" + file.getName());
+                File new_file = new File(file2.getAbsolutePath() + "\\" + file.getName());
                 new_file.mkdirs();
                 String[] rec = { "", file.getAbsolutePath(), new_file.getAbsolutePath() };
                 this.cp_r(rec); // Recursion
                 continue; // to Not complete the loop
             }
             try {
-                Files.copy(file.toPath(), new File(file2.getAbsolutePath() + "/" + file.getName()).toPath(),
+                Files.copy(file.toPath(), new File(file2.getAbsolutePath() + "\\" + file.getName()).toPath(),
                         StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -316,7 +320,6 @@ public class Terminal {
             this.flag = false;
         }
     }
-//TODO cd; mkdir
     public static void main(String[] args) throws IOException {
         Terminal terminal = new Terminal();
         terminal.currentPath = new File(System.getProperty("user.dir"));
