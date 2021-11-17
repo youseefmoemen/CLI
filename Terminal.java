@@ -50,7 +50,6 @@ public class Terminal {
             System.out.println("Too Many Arguements");
     }
 
-    // Can't ls when i go back in cd..
     public Boolean cd(String args) {
         if (args.equals("")) {
             this.currentPath = new File("C:\\");
@@ -58,7 +57,7 @@ public class Terminal {
         }
         if (args.equals("..")) {
             String pervious = this.currentPath.getAbsolutePath().substring(0,
-                    this.currentPath.getAbsolutePath().lastIndexOf('\\'));
+                    this.currentPath.getAbsolutePath().lastIndexOf("/"));
             if (pervious.equals("")) {
                 System.out.println("NO pervious path!");
                 return true;
@@ -66,7 +65,7 @@ public class Terminal {
             this.currentPath = new File(pervious);
             return true;
         }
-        File file = new File(this.currentPath.getAbsolutePath() + "\\" + args);
+        File file = new File(this.currentPath.getAbsolutePath() + "/" + args);
         if (file.isDirectory()) {
             this.currentPath = file;
             return true;
@@ -317,7 +316,7 @@ public class Terminal {
             this.flag = false;
         }
     }
-
+//TODO cd; mkdir
     public static void main(String[] args) throws IOException {
         Terminal terminal = new Terminal();
         terminal.currentPath = new File(System.getProperty("user.dir"));
