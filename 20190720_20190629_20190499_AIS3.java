@@ -64,7 +64,6 @@ public class Terminal {
                 return true;
             }
             this.currentPath = new File(pervious + "\\");
-            if(this.currentPath.isDirectory()) System.out.println("Hi");
             return true;
         }
         File file = new File(this.currentPath.getAbsolutePath() + "\\" + args);
